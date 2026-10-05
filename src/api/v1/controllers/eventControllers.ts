@@ -100,3 +100,47 @@ export const createEvent = async (
     next(error);
   }
 };
+
+export const updateEvent = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const id = Number(req.params.id);
+    if (isNaN(id)) {
+        res.status(HTTP_STATUS.BAD_REQUEST).json({
+        message: "Missing event ID",
+        });
+        return;
+        }
+
+    const existingEvent = await eventService.findEventById(id);
+
+    if (!existingEvent) {
+        res.status(HTTP_STATUS.NOT_FOUND).json({
+            message: "Event not found",
+        });
+        return;
+    }
+
+    // Extract update fields
+    const { name, date, capacity, registrationCount } = req.body;
+
+    // Create update data object with only the fields that can be updated
+    const updateData = { 
+        name, 
+        date, 
+        capacity, 
+        registrationCount,
+    };
+
+    const updatedEvent: Event = await eventService.updateEvent(id, updateData);
+    res.status(HTTP_STATUS.OK).json({
+      message: "Event updated successfully",
+      data: updatedEvent,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
