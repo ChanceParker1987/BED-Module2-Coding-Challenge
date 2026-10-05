@@ -111,3 +111,18 @@ export const updateEvent = async (
 
   return structuredClone(events[index]);
 };
+
+/**
+ * Deletes an event from storage
+ * @param id - The ID of the event to delete
+ * @throws Error if event with given ID is not found
+ */
+export const deleteEvent = async (id: number): Promise<void> => {
+  const index: number = events.findIndex((event: Event) => event.id === id);
+
+  if (index === -1) {
+    throw new Error(`Item with ID ${id} not found`);
+  }
+
+  events.splice(index, 1);
+};
