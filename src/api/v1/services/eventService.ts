@@ -45,3 +45,22 @@ export const getAllEvents = async (): Promise<Event[]> => {
   // Return a deep clone to avoid direct mutation
   return structuredClone(events);
 };
+
+/**
+ * Finds an existing event by id
+ * @param id - The ID of the event 
+ * @returns The event with given id
+ * @throws Error if event with given ID is not found
+ */
+export const findEventById = async (
+    id: number,
+): Promise<Event | undefined> => {
+    const event = events.find((event: Event) => event.id === id);
+
+    if (!event) {
+        return undefined;
+    }
+
+    return structuredClone(event);
+};
+
