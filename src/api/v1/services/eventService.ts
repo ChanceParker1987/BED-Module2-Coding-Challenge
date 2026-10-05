@@ -64,3 +64,25 @@ export const findEventById = async (
     return structuredClone(event);
 };
 
+/**
+ * Creates a new event
+ * @param eventData - The data for the new event 
+ * @returns The created event with generated ID
+ */
+export const createEvent = async (eventData: {
+  name: string;
+  date: string;
+  capacity: number;
+}): Promise<Event> => {
+  // Create a new event with auto-generated ID
+  const newEvent: Event = {
+    id: events.length + 1,
+    name: eventData.name,
+    date: eventData.date,
+    capacity: eventData.capacity,
+    registrationCount: 0
+  };
+
+  events.push(newEvent);
+  return structuredClone(newEvent);
+};
