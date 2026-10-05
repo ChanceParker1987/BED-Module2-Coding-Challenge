@@ -144,3 +144,28 @@ export const updateEvent = async (
     next(error);
   }
 };
+
+export const deleteEvent = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const id = Number(req.params.id);
+
+    const existingEvent = await eventService.findEventById(id);
+
+    if (!existingEvent) {
+        res.status(HTTP_STATUS.NOT_FOUND).json({
+            message: "Event not found",
+        });
+        return;
+    }
+    await eventService.deleteEvent(id);
+    res.status(HTTP_STATUS.OK).json({
+      message: "Event deleted successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
