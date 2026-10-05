@@ -65,3 +65,38 @@ export const getEventPopularity = async (
     next(error);
   }
 };
+
+export const createEvent = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    // Basic validation - check for required fields
+    if (!req.body.name) {
+      res.status(HTTP_STATUS.BAD_REQUEST).json({
+        message: "Missing required field: name",
+      });
+      } else if (!req.body.date) {
+    res.status(HTTP_STATUS.BAD_REQUEST).json({
+        message: "Missing required field: date",
+    });
+    } else if (!req.body.capacity) {
+      res.status(HTTP_STATUS.BAD_REQUEST).json({
+        message: "Missing required field: capacity",
+    });
+    } else {
+      // Extract only the fields we need
+      const { name, date, capacity } = req.body;
+      const eventData = { name, date, capacity };
+
+      const newEvent: Event = await eventService.createEvent(eventData);
+      res.status(HTTP_STATUS.CREATED).json({
+        message: "Event created successfully",
+        data: newEvent,
+      });
+    }
+  } catch (error) {
+    next(error);
+  }
+};
