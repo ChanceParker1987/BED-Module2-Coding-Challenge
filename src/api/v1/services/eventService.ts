@@ -86,3 +86,28 @@ export const createEvent = async (eventData: {
   events.push(newEvent);
   return structuredClone(newEvent);
 };
+
+/**
+ * Updates an existing event
+ * @param id - The ID of the event to update
+ * @param eventData - The fields to update 
+ * @returns The updated event
+ * @throws Error if event with given ID is not found
+ */
+export const updateEvent = async (
+  id: number,
+  eventData: Pick<Event, "name" | "date" | "capacity" | "registrationCount">
+): Promise<Event> => {
+  const index: number = events.findIndex((events: Event) => events.id === id);
+
+  if (index === -1) {
+    throw new Error(`Item with ID ${id} not found`);
+  }
+  // Update the event with the provided fields
+  events[index] = {
+    ...events[index],
+    ...eventData,
+  };
+
+  return structuredClone(events[index]);
+};
