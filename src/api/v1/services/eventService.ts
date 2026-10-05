@@ -126,3 +126,41 @@ export const deleteEvent = async (id: number): Promise<void> => {
 
   events.splice(index, 1);
 };
+
+/**
+ * Calaculates event popularity, assigns a message based on popularity tier,
+ * and returns all data related to the event by id
+ * @param id - The ID of the event to get the popularity of
+ * @returns All event data, including pots remaining, popularity score,
+ * and popularity tier with message
+ */
+export function getEventPopularity(id: number,) {
+    // Find event by id, if no event exists, return undefined
+    const event = events.find((event: Event) => event.id === id);
+    if (!event) {
+    return undefined;
+    }
+    // Calculate spots remaining
+    const spotsRemaining = (event.capacity - event.registrationCount);
+    // Calculate popularity score
+    const popularityScore = 
+        event.capacity === 0 ? 0 : Math.round((event.registrationCount / event.capacity) *1000) / 10;
+    // Assign popularity tier with messaged based on popularity score
+    const popularityTier: string = 
+        popularityScore >= 90
+        ? "Hot":
+        popularityScore >= 70
+        ? "Popular":
+        popularityScore >= 50
+        ? "Moderate":
+        popularityScore >= 25
+        ? "Building":
+          "New"
+
+    return {
+        ...event,
+        spotsRemaining,
+        popularityScore,
+        popularityTier,
+    };
+}
